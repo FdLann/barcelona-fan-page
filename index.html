@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      body {
+        background-color: #f5f5f0;
+        font-family: Arial, sans-serif;
+        color: #000;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #000;
+      }
+
+      #filter-tombol {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+
+      #filter-tombol button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        background-color: #103ec7;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      #filter-tombol button.aktif {
+        background-color: yellow;
+        color: #000;
+      }
+
+      #daftar-pemain {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .kartu-pemain {
+        color: #fff;
+        text-align: center;
+        background: linear-gradient(135deg, #a80000, #00008b);
+        border: black 2px;
+        border-radius: 10px;
+        padding: 16px;
+        font-size: 2em;
+      }
+
+      .kartu-pemain img {
+        object-fit: cover;
+        object-position: top;
+        width: 100%;
+        height: 200px;
+      }
+
+      /* modal */
+      #modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+      }
+
+      #modal-konten {
+        background: linear-gradient(135deg, #a80000, #00008b);
+        padding: 30px;
+        border-radius: 12px;
+        width: 300px;
+        position: relative;
+        color: white;
+      }
+
+      #modal-konten img {
+        object-fit: cover;
+        object-position: top;
+        width: 100%;
+        height: 200px;
+      }
+
+      #modal-tutup {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    </style>
+    <h1>FC Barcelona - Skuad</h1>
+
+    <div id="filter-tombol">
+      <button>Semua</button>
+      <button>Goalkeeper</button>
+      <button>Defender</button>
+      <button>Midfielder</button>
+      <button>Forward</button>
+    </div>
+
+    <div id="daftar-pemain"></div>
+
+    <div id="modal" style="display: none">
+      <div id="modal-konten">
+        <button id="modal-tutup">x</button>
+        <img src="" alt="Pemain-Barcelona" id="modal-foto" />
+        <h2 id="modal-nama"></h2>
+        <p id="modal-posisi"></p>
+        <p id="modal-nomor"></p>
+        <p id="modal-negara"></p>
+      </div>
+    </div>
+
+    <script>
+      const pemain = [
+        {
+          nama: "Marc-Andre ter Stegen",
+          posisi: "Goalkeeper",
+          nomorPunggung: 1,
+          negara: "Jerman",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250007631.webp",
+        },
+        {
+          nama: "Joan García Pons",
+          posisi: "Goalkeeper",
+          nomorPunggung: 13,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250118131.webp",
+        },
+        {
+          nama: "Wojciech Tomasz Szczęsny",
+          posisi: "Goalkeeper",
+          nomorPunggung: 25,
+          negara: "Polandia",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/108501.webp",
+        },
+        {
+          nama: "Diego Kochen",
+          posisi: "Goalkeeper",
+          nomorPunggung: 31,
+          negara: "Amerika Serikat",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250169576.webp",
+        },
+        {
+          nama: "João Pedro Cavaco Cancelo",
+          posisi: "Defender",
+          nomorPunggung: 2,
+          negara: "Portugal",
+          foto: "https://www.fcbarcelona.com/photo-resources/2026/01/15/4c9c8ca8-7d08-4325-8566-3aa3fce05d14/00-Cancelo.png?width=670&height=790",
+        },
+        {
+          nama: "Alejandro Balde Martínez",
+          posisi: "Defender",
+          nomorPunggung: 3,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250135416.webp",
+        },
+        {
+          nama: "Ronald Federico Araújo da Silva",
+          posisi: "Defender",
+          nomorPunggung: 4,
+          negara: "Uruguay",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250134170.webp",
+        },
+        {
+          nama: "Pablo Martín Páez Gavira",
+          posisi: "Midfielder",
+          nomorPunggung: 6,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250139255.webp",
+        },
+        {
+          nama: "Pedro González López",
+          posisi: "Midfielder",
+          nomorPunggung: 8,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250143693.webp",
+        },
+        {
+          nama: "Fermín López Marín",
+          posisi: "Midfielder",
+          nomorPunggung: 16,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250164780.webp",
+        },
+        {
+          nama: "Frenkie de Jong",
+          posisi: "Midfielder",
+          nomorPunggung: 21,
+          negara: "Belanda",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/50327423.webp",
+        },
+        {
+          nama: "Ferran Torres Garcia",
+          posisi: "Forward",
+          nomorPunggung: 7,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250088320.webp",
+        },
+        {
+          nama: "Robert Lewandowski ",
+          posisi: "Forward",
+          nomorPunggung: 9,
+          negara: "Polandia",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250002096.webp",
+        },
+        {
+          nama: "Lamine Yamal Nasraoui Ebana",
+          posisi: "Forward",
+          nomorPunggung: 10,
+          negara: "Spanyol",
+          foto: "https://img.uefa.com/imgml/TP/players/1/2026/cutoff/250176450.webp",
+        },
+      ];
+
+      //   Ambil Elemen div
+      const kontainer = document.querySelector("#daftar-pemain");
+
+      //   fungsi buat nampilin pemain
+      function tampilkanPemain(daftarPemain) {
+        kontainer.innerHTML = daftarPemain
+          .map((p) => {
+            return `
+            <div class="kartu-pemain" onclick="pilihPemain(${p.nomorPunggung})">
+            ${p.foto ? `<img src="${p.foto}">` : `<p>Foto Tidak Tersedia</p>`}
+            <h3>${p.nomorPunggung}. ${p.nama}</h3>
+            <p>Posisi: ${p.posisi}</p>    
+            <p>Negara: ${p.negara}</p>    
+            </div>
+            `;
+          })
+          .join("");
+      }
+
+      //   panggil fungsi
+      tampilkanPemain(pemain);
+
+      const tombol = document.querySelectorAll("#filter-tombol button");
+
+      tombol.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          tombol.forEach((btn) => btn.classList.remove("aktif"));
+          const posisi = btn.textContent;
+          btn.classList.add("aktif");
+
+          if (posisi === "Semua") {
+            tampilkanPemain(pemain);
+          } else {
+            const hasil = pemain.filter((p) => p.posisi === posisi);
+            tampilkanPemain(hasil);
+          }
+        });
+      });
+
+      //   MODAL
+      const modal = document.querySelector("#modal");
+      const modalTutup = document.querySelector("#modal-tutup");
+
+      function bukaModal(p) {
+        document.querySelector("#modal-foto").src = p.foto;
+        document.querySelector("#modal-nama").textContent = p.nama;
+        document.querySelector("#modal-posisi").textContent =
+          "Posisi:" + p.posisi;
+        document.querySelector("#modal-nomor").textContent =
+          "Nomor:" + p.nomorPunggung;
+        document.querySelector("#modal-negara").textContent =
+          "Negara:" + p.negara;
+        modal.style.display = "flex";
+      }
+
+      modalTutup.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+
+      function pilihPemain(nomor) {
+        const pemainDipilih = pemain.find((p) => p.nomorPunggung === nomor);
+        bukaModal(pemainDipilih);
+      }
+    </script>
+  </body>
+</html>
